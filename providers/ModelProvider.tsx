@@ -1,6 +1,6 @@
 "use client";
 
-import Model from "@/components/Model";
+import AuthModel from "@/components/AuthModel";
 import { useEffect, useState } from "react";
 
 const ModelProvider = () => {
@@ -16,9 +16,7 @@ const ModelProvider = () => {
 
     return (
         <>
-        <Model title = "Test Model" description="Test Description" isOpen onChange={() => {}}>
-            Test Children
-        </Model>
+            <AuthModel/>
         </>
     );
 }
