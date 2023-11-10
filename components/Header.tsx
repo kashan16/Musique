@@ -4,6 +4,7 @@ import useAuthModal from "@/hooks/useAuthModel";
 import { useUser } from "@/hooks/useUser";
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { BiSearch } from "react-icons/bi";
 import { FaUserAlt } from "react-icons/fa";
 import { HiHome } from "react-icons/hi";
@@ -20,15 +21,22 @@ const Header: React.FC<HeaderProps> = ({
   children,
   className,
 }) => {
-  //const player = usePlayer();
   const router = useRouter();
   const authModal = useAuthModal();
 
   const supabaseClient = useSupabaseClient();
   const { user } = useUser();
 
-  const handleLogout = ()  => {
-    //handle the logout later
+  const handleLogout = async ()  => {
+    const { error }  = await supabaseClient.auth.signOut();
+    //TODO : reset any playing songs
+    router.refresh();
+    if(error){
+      toast.error(error.message);
+    }
+    else {
+      toast.success("logged out successfully!");
+    }
   }
 
   return (
@@ -117,7 +125,7 @@ const Header: React.FC<HeaderProps> = ({
                 Logout
               </Button>
               <Button 
-                onClick={() => router.push('/account')} 
+                onClick={() => router.push('/account') }//will throw error RN 
                 className="bg-white"
               >
                 <FaUserAlt />
