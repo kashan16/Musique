@@ -1,8 +1,8 @@
 "use client";
 
 import {
-    useSessionContext,
-    useSupabaseClient
+  useSessionContext,
+  useSupabaseClient
 } from '@supabase/auth-helpers-react';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
@@ -18,6 +18,13 @@ const AuthModel = () => {
   const { onClose, isOpen } = useAuthModel();
   
   const supabaseClient = useSupabaseClient();
+
+
+  interface AuthModel {
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
+  }
 
   useEffect(() => {
     if (session) {
@@ -41,7 +48,7 @@ const AuthModel = () => {
     >
       <Auth
         supabaseClient={supabaseClient}
-        providers={['github']}
+        providers={['google','discord','twitter','facebook']}
         magicLink={true}
         appearance={{
           theme: ThemeSupa,
