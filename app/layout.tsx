@@ -1,6 +1,7 @@
 import Sidebar from '@/components/Sidebar'
 import ModelProvider from '@/providers/ModelProvider'
 import SupabaseProvider from '@/providers/SupabaseProvider'
+import ToasterProvider from '@/providers/ToasterProvider'
 import UserProvider from '@/providers/UserProvider'
 import { Figtree } from 'next/font/google'
 import './globals.css'
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
+        <ToasterProvider/>
         <SupabaseProvider>
           <UserProvider>
             <ModelProvider/>
