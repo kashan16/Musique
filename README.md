@@ -1,10 +1,10 @@
-# Spotify Clone
+# Musique
 
 A Spotify clone built with TypeScript and React.
 
 ## Table of Contents
 
-- [Spotify Clone](#spotify-clone)
+- [Musique](#musique)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Installation](#installation)
