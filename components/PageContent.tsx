@@ -1,6 +1,7 @@
 "use client"
 
 import { Songs } from "@/types";
+import SongItem from "./SongItem";
 
 
 
