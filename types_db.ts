@@ -32,32 +32,32 @@ export interface Database {
           }
         ]
       }
-      "Liked Songs": {
+      liked_songs: {
         Row: {
           created_at: string
-          Song_ID: number
+          song_id: number
           user_id: string
         }
         Insert: {
           created_at?: string
-          Song_ID: number
+          song_id: number
           user_id: string
         }
         Update: {
           created_at?: string
-          Song_ID?: number
+          song_id?: number
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "Liked Songs_Song_ID_fkey"
-            columns: ["Song_ID"]
+            foreignKeyName: "liked_songs_song_id_fkey"
+            columns: ["song_id"]
             isOneToOne: false
-            referencedRelation: "SONGS"
+            referencedRelation: "songs"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "Liked Songs_user_id_fkey"
+            foreignKeyName: "liked_songs_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -142,37 +142,37 @@ export interface Database {
         }
         Relationships: []
       }
-      SONGS: {
+      songs: {
         Row: {
           author: string | null
           created_at: string
           id: number
-          IMG_path: string | null
-          Song_path: string | null
-          Title: string | null
+          image_path: string | null
+          song_path: string | null
+          title: string | null
           user_id: string | null
         }
         Insert: {
           author?: string | null
           created_at?: string
           id?: number
-          IMG_path?: string | null
-          Song_path?: string | null
-          Title?: string | null
+          image_path?: string | null
+          song_path?: string | null
+          title?: string | null
           user_id?: string | null
         }
         Update: {
           author?: string | null
           created_at?: string
           id?: number
-          IMG_path?: string | null
-          Song_path?: string | null
-          Title?: string | null
+          image_path?: string | null
+          song_path?: string | null
+          title?: string | null
           user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "SONGS_user_id_fkey"
+            foreignKeyName: "songs_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"

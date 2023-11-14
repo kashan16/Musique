@@ -36,6 +36,6 @@
   },
   "devDependencies": {
     "@types/uniqid": "^5.3.4",
-    "supabase": "^1.110.1"
+    "supabase": "^1.112.0"
   }
 }
