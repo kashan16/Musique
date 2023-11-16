@@ -2,9 +2,16 @@
 import useAuthModel from "@/hooks/useAuthModel";
 import useUploadModel from "@/hooks/useUploadModel";
 import { useUser } from "@/hooks/useUser";
+import { Song } from "@/types";
 import { AiOutlinePlus } from "react-icons/ai";
 import { TbPlaylist } from "react-icons/tb";
-const Library = () => {
+import MediaItem from "./MediaItem";
+
+interface LibraryProps {
+    songs : Song[];
+}
+
+const Library : React.FC<LibraryProps> = ({songs}) => {
     const authModel = useAuthModel();
     const uploadModel = useUploadModel();
     const { user } = useUser();
@@ -26,7 +33,12 @@ const Library = () => {
                 <AiOutlinePlus onClick={onClick} size = {28} className="text-neutral-400 cursor-pointer hover:text-white transition"/>
             </div>
             <div className = "flex flex-col gap-y-2 mt-4 px-3">
-                List Of Songs !
+                {songs.map((item) => (
+                    <MediaItem
+                        onClick = {() => {}}
+                        key = {item.id}
+                        data = {item}/>
+                ))}
             </div>
         </div>
     );
