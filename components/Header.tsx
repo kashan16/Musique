@@ -74,7 +74,7 @@ const Header: React.FC<HeaderProps> = ({
               flex 
               items-center 
               justify-center 
-              cursor-pointer 
+              cursor-pointnameer 
               hover:opacity-75 
               transition
             "
