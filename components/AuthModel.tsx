@@ -49,7 +49,7 @@ const AuthModel = () => {
       <Auth
         supabaseClient={supabaseClient}
         providers={['google','facebook']}
-        //TODO : create auth objects for google and facebook for login and sign in process
+        //TODO : create auth objects for facebook for login and sign in process
         magicLink={true}
         appearance={{
           theme: ThemeSupa,
