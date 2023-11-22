@@ -24,14 +24,15 @@ songId }) => {
         function getRandomInt(min: number, max: number): number {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-        
-        const randomNumber : number = getRandomInt(1,10);
-        const nextSong = player.ids[currentIndex+randomNumber];
 
-        if(!nextSong){
-            return player.setId(player.ids[0]);
+        const randomNumber : number = getRandomInt(1,10);
+        //making sure that the index never goes out of bounds
+        let nextSongIndex = (currentIndex + randomNumber)%player.ids.length;
+
+        if(nextSongIndex < 0){
+            nextSongIndex += player.ids.length;
         }
-        player.setId(nextSong);
+        player.setId(player.ids[nextSongIndex]);
 
     }
     return (
