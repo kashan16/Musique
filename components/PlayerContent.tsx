@@ -1,5 +1,6 @@
 "use Client"
 
+import useLoadSongInfo from "@/hooks/useLoadSongUrl";
 import usePlayer from "@/hooks/usePlayer";
 import { Song } from "@/types";
 import { useEffect, useState } from "react";
@@ -9,6 +10,7 @@ import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import useSound from "use-sound";
 import LikeButton from "./LikeButton";
 import MediaItem from "./MediaItem";
+import SeekBar from "./SeekBar";
 import Slider from "./Slider";
 
 interface PlayerContentProps {
@@ -17,6 +19,7 @@ interface PlayerContentProps {
 }
 
 const PlayerContent : React.FC<PlayerContentProps> =  ({song , songUrl}) => {
+    const duration = useLoadSongInfo;
     const player = usePlayer();
     const [ volume , setVolume ] = useState(1);
     const [ isPlaying , setIsPlaying ] = useState(false);
@@ -97,7 +100,6 @@ const PlayerContent : React.FC<PlayerContentProps> =  ({song , songUrl}) => {
         setVolume(value);
         sound?.volume(value);
     };
-
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 h-full">
             <div className="flex w-full justify-start">
@@ -121,6 +123,9 @@ const PlayerContent : React.FC<PlayerContentProps> =  ({song , songUrl}) => {
             <div className="hidden md:flex w-full justify-end items-center gap-x-2">
                     <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={40}/>
                     <Slider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
+            </div>
+            <div>
+                <SeekBar/>
             </div>
         </div>
     )
