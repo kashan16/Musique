@@ -1,6 +1,5 @@
 "use Client"
 
-import useLoadSongInfo from "@/hooks/useLoadSongUrl";
 import usePlayer from "@/hooks/usePlayer";
 import { Song } from "@/types";
 import { useEffect, useState } from "react";
@@ -11,6 +10,7 @@ import useSound from "use-sound";
 import LikeButton from "./LikeButton";
 import MediaItem from "./MediaItem";
 import SeekBar from "./SeekBar";
+import ShuffleButton from "./ShuffleButton";
 import Slider from "./Slider";
 
 interface PlayerContentProps {
@@ -19,7 +19,6 @@ interface PlayerContentProps {
 }
 
 const PlayerContent : React.FC<PlayerContentProps> =  ({song , songUrl}) => {
-    const duration = useLoadSongInfo;
     const player = usePlayer();
     const [ volume , setVolume ] = useState(1);
     const [ isPlaying , setIsPlaying ] = useState(false);
@@ -106,6 +105,7 @@ const PlayerContent : React.FC<PlayerContentProps> =  ({song , songUrl}) => {
                 <div className="flex items-center gap-x-4">
                     <MediaItem data={song}/>
                     <LikeButton songId={song.id}/>
+                    <ShuffleButton songId={song.id}/>
                 </div>
             </div>
             <div className="flex md:hidden col-auto w-full justify-end items-center">
