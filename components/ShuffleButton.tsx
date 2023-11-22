@@ -24,11 +24,15 @@ songId }) => {
         function getRandomInt(min: number, max: number): number {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
-
+        
         const randomNumber : number = getRandomInt(1,10);
-
         const nextSong = player.ids[currentIndex+randomNumber];
+
+        if(!nextSong){
+            return player.setId(player.ids[0]);
+        }
         player.setId(nextSong);
+
     }
     return (
         <button onClick={handleShuffle} className="hover:opacity-75 transition" style={{ color: isShuffle ? '#66ff99' : 'white' }}>
