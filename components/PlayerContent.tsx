@@ -18,7 +18,8 @@ interface PlayerContentProps {
     songUrl : string;
 }
 
-const PlayerContent : React.FC<PlayerContentProps> =  ({song , songUrl}) => {
+const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
+    
     const player = usePlayer();
     const [ volume , setVolume ] = useState(1);
     const [ isPlaying , setIsPlaying ] = useState(false);
@@ -124,8 +125,8 @@ const PlayerContent : React.FC<PlayerContentProps> =  ({song , songUrl}) => {
                     <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={40}/>
                     <Slider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
             </div>
-            <div>
-                <SeekBar/>
+            <div className="col-span-3 flex justify-center items-center">
+                <SeekBar />
             </div>
         </div>
     )
