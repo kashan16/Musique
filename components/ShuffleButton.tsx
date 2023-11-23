@@ -25,7 +25,7 @@ songId }) => {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        const randomNumber : number = getRandomInt(1,10);
+        const randomNumber : number = getRandomInt(-(player.ids.length) , player.ids.length-1);
         //making sure that the index never goes out of bounds
         let nextSongIndex = (currentIndex + randomNumber)%player.ids.length;
 
