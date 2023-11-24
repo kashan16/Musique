@@ -25,7 +25,6 @@ const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
     const [ isPlaying , setIsPlaying ] = useState(false);
     const Icon = isPlaying ? BsPauseFill : BsPlayFill;
     const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
-    
     const onPlayNext = () => {
         if(player.ids.length === 0)
         {
@@ -126,7 +125,7 @@ const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
                     <Slider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
             </div>
             <div className="col-span-3 flex justify-center items-center">
-                <SeekBar />
+                <SeekBar value={0} onChange={() => {}} data={song} />
             </div>
         </div>
     )
