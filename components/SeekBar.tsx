@@ -1,7 +1,6 @@
 import { Song } from "@/types";
 import * as RadixSlider from "@radix-ui/react-slider";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface SeekbarProps {
   value?: number;
@@ -12,23 +11,6 @@ interface SeekbarProps {
 
 const SeekBar: React.FC<SeekbarProps> = ({ value = 0, onChange, duration = 0, data }) => {
   const [songDuration, setSongDuration] = useState<number | null>(null);
-
- useEffect(() => {
-  const fetchSongDuration = async () => {
-    try {
-      const response = await axios.get(`https://musicbrainz.org/ws/2/recording/?query=${encodeURIComponent(`recording:${data.title} AND artist:${data.author}`)}&fmt=json`);
-      const recording = response.data.recordings[0]; // Assuming the first result is the most relevant
-      console.log('Recording:', recording); // Add this line to check the structure of the recording object
-      const durationInSeconds = recording ? Math.round(recording.length / 1000) : null;
-      console.log('Duration:', durationInSeconds); // Add this line to check the duration value
-      setSongDuration(durationInSeconds);
-    } catch (error) {
-      console.error('Error fetching song duration:', error);
-    }
-  };
-  fetchSongDuration();
-}, [data.author, data.title]);
-
 
   const handleChange = (newValue: number[]) => {
     onChange?.(newValue[0]);
