@@ -47,7 +47,7 @@ const SeekBar: React.FC<SeekbarProps> = ({ value = 0, onChange, data }) => {
   };
 
   return (
-    <div style={{ position: 'relative', width: '256px', marginTop: '-10px' }}>
+    <div style={{ position: 'relative', width: '256px', marginTop: '-20px' }}>
       <RadixSlider.Root className="relative flex items-center select-none touch-none h-full" value={[value]} onValueChange={handleChange} aria-label="Volume" max={1}>
         <div style={{ marginRight: '10px' }} className="text-white text-bold">{formatDuration(0)}</div>
         <RadixSlider.Track className="bg-neutral-600 relative grow rounded-full h-[3px]">
