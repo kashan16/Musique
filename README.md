@@ -64,6 +64,7 @@ List the technologies, libraries, and frameworks used in your project:
 - Tailwind CSS
 - Redux
 - Supabase
+- Saavan API
 
 ## Contributing
 
