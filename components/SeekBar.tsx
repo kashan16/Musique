@@ -17,19 +17,25 @@ const SeekBar: React.FC<SeekbarProps> = ({ value = 0, onChange, data }) => {
       try {
         const response = await axios.get(`https://saavn.me/search/songs?query=${encodeURIComponent(data.title)}`);
         const result = response.data?.data?.results[0];
-
-        if (result && result.primaryArtists.includes(data.author)) {
-          setSongDuration(result.duration);
+        if (result) {
+          const lowercaseAuthor = data.author.toLowerCase();
+          const lowercasePrimaryArtists = result.primaryArtists.toLowerCase();
+          if (lowercasePrimaryArtists.includes(lowercaseAuthor)) {
+            setSongDuration(result.duration);
+          } else {
+            console.warn('Song not found or artist does not match');
+          }
         } else {
-          console.warn('Song not found or artist does not match');
+          console.warn('No results found for the song');
         }
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
-
+  
     fetchSongDuration();
   }, [data.title, data.author]);
+  
   
   const handleChange = (newValue: number[]) => {
     // Update the displayed duration when the seek bar value changes
@@ -43,11 +49,11 @@ const SeekBar: React.FC<SeekbarProps> = ({ value = 0, onChange, data }) => {
   return (
     <div style={{ position: 'relative', width: '256px', marginTop: '-10px' }}>
       <RadixSlider.Root className="relative flex items-center select-none touch-none h-full" value={[value]} onValueChange={handleChange} aria-label="Volume" max={1}>
-        <div style={{ marginRight: '10px' }} className="text-white text-sm">{formatDuration(0)}</div>
+        <div style={{ marginRight: '10px' }} className="text-white text-bold">{formatDuration(0)}</div>
         <RadixSlider.Track className="bg-neutral-600 relative grow rounded-full h-[3px]">
           <RadixSlider.Range className="absolute bg-white rounded-full h-full transition-all" style={{ transform: `scaleX(${songDuration || 0})` }} />
         </RadixSlider.Track>
-        <div style={{ marginLeft: '10px' }} className="text-white text-sm">{formatDuration(songDuration)}</div>
+        <div style={{ marginLeft: '10px' }} className="text-white text-bold">{formatDuration(songDuration || 0)}</div>
       </RadixSlider.Root>
     </div>
   );
