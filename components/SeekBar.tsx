@@ -70,9 +70,9 @@ const SeekBar: React.FC<SeekbarProps> = ({ data }) => {
   return (
     <div style={{ position: 'relative', width: '256px', marginTop: '-15px' }}>
       <div className="relative flex items-center select-none touch-none h-full" aria-label="progress">
-        <div style={{ marginRight: '10px' }} className="text-white text-bold">{formatDuration(0)}</div>
-        <div className="bg-neutral-600 relative grow rounded-full h-[3px]">
-          <div className="absolute bg-white rounded-full h-full transition-all" style={{ width: `${progress * 100}%` }} />
+        <div style={{ marginRight: '10px' ,}} className="text-white text-bold transition-all">{formatDuration(progress * (songDuration || 1))}</div>
+        <div className="bg-neutral-500 relative grow rounded-full h-[3px]">
+          <div className="absolute bg-green-500 rounded-full h-full transition-all" style={{ width: `${progress * 100}%` }} />
         </div>
         <div style={{ marginLeft: '10px' }} className="text-white text-bold">{formatDuration(songDuration || 0)}</div>
       </div>
