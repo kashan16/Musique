@@ -1,16 +1,15 @@
 import { Song } from "@/types";
-import * as RadixSlider from "@radix-ui/react-slider";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface SeekbarProps {
-  value?: number;
   onChange?: (value: number) => void;
   data: Song;
 }
 
-const SeekBar: React.FC<SeekbarProps> = ({ value = 0, onChange, data }) => {
+const SeekBar: React.FC<SeekbarProps> = ({ data }) => {
   const [songDuration, setSongDuration] = useState<number | null>(null);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const fetchSongDuration = async () => {
@@ -32,29 +31,51 @@ const SeekBar: React.FC<SeekbarProps> = ({ value = 0, onChange, data }) => {
         console.error('Error fetching data:', error);
       }
     };
-  
+
     fetchSongDuration();
   }, [data.title, data.author]);
-  
-  
-  const handleChange = (newValue: number[]) => {
+
+  useEffect(() => {
+    let interval : any;
+
+    if (songDuration !== null) {
+      // Update progress every second
+      interval = setInterval(() => {
+        setProgress((prevProgress) => {
+          const newProgress = prevProgress + (1 / songDuration);
+          // Check if the new progress is greater than or equal to 1 (100%)
+          if (newProgress >= 1) {
+            // Song has ended, clear the interval
+            clearInterval(interval);
+          }
+          return newProgress;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      // Cleanup interval on component unmount
+      clearInterval(interval);
+    };
+  }, [songDuration]);
+
+  const handleChange = (newValue: number) => {
     // Update the displayed duration when the seek bar value changes
-    const newDuration = newValue[0] * (songDuration || 0);
+    const newDuration = newValue * (songDuration || 0);
     setSongDuration(newDuration);
 
     // Call the provided onChange prop
-    onChange?.(newValue[0]);
   };
 
   return (
     <div style={{ position: 'relative', width: '256px', marginTop: '-15px' }}>
-      <RadixSlider.Root className="relative flex items-center select-none touch-none h-full" value={[value]} onValueChange={handleChange} aria-label="Volume" max={1}>
+      <div className="relative flex items-center select-none touch-none h-full" aria-label="progress">
         <div style={{ marginRight: '10px' }} className="text-white text-bold">{formatDuration(0)}</div>
-        <RadixSlider.Track className="bg-neutral-600 relative grow rounded-full h-[3px]">
-          <RadixSlider.Range className="absolute bg-white rounded-full h-full transition-all" style={{ transform: `scaleX(${songDuration || 0})` }} />
-        </RadixSlider.Track>
+        <div className="bg-neutral-600 relative grow rounded-full h-[3px]">
+          <div className="absolute bg-white rounded-full h-full transition-all" style={{ width: `${progress * 100}%` }} />
+        </div>
         <div style={{ marginLeft: '10px' }} className="text-white text-bold">{formatDuration(songDuration || 0)}</div>
-      </RadixSlider.Root>
+      </div>
     </div>
   );
 };

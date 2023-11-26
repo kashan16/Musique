@@ -125,7 +125,7 @@ const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
                     <Slider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
             </div>
             <div className="col-span-3 flex justify-center items-center">
-                <SeekBar value={0} onChange={() => {}} data={song} />
+                <SeekBar onChange={() => {}} data={song} />
             </div>
         </div>
     )
