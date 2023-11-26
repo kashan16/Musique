@@ -65,6 +65,7 @@ List the technologies, libraries, and frameworks used in your project:
 - Redux
 - Supabase
 - Saavan API
+- Axios
 
 ## Contributing
 
