@@ -33,18 +33,28 @@ const CustomSlider: React.FC<SliderProps> = ({
 
   return (
     <div className="relative flex items-center select-none touch-none w-20">
-      <Tooltip title={`${Math.round(value * 100)}%`} open={isHovered}>
-        <Slider
-          value={value}
-          min={min}
-          max={max}
-          step={step}
-          onChange={handleChange}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        />
-      </Tooltip>
-    </div>
+    <Tooltip title={`${Math.round(value * 100)}%`} open={isHovered} placement="top">
+      <Slider value={value} min={min} max={max} step={step} onChange={handleChange} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
+        sx={{
+          color: '#4CAF50',
+          '& .MuiSlider-thumb': {
+            width: 12,
+            height: 12,
+            backgroundColor: '#4CAF50',
+            borderRadius: '50%',
+            boxShadow: '0px 0px 5px 0px #4CAF50',
+            visibility : isHovered ? 'visible' : 'hidden',
+          },
+          '& .MuiSlider-rail': {
+            backgroundColor: '#d4d4d4',
+          },
+          '& .MuiSlider-track': {
+            backgroundColor: '#4CAF50',
+          },
+        }}
+      />
+    </Tooltip>
+  </div>
   );
 };
 

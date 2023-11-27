@@ -8,11 +8,11 @@ import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { HiSpeakerWave, HiSpeakerXMark } from "react-icons/hi2";
 import useSound from "use-sound";
+import CustomSlider from "./CustomSlider";
 import LikeButton from "./LikeButton";
 import MediaItem from "./MediaItem";
 import SeekBar from "./SeekBar";
 import ShuffleButton from "./ShuffleButton";
-import Slider from "./Slider";
 
 interface PlayerContentProps {
     song : Song;
@@ -127,7 +127,7 @@ const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
             </div>
             <div className="hidden md:flex w-full justify-end items-center gap-x-2">
                     <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={40}/>
-                    <Slider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
+                    <CustomSlider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
             </div>
             <div className="col-span-3 flex justify-center items-center">
                 <SeekBar onChange={() => {}} onPlay = {handlePlay} onPause = {handlePlay} isPlaying = {isPlaying} data={song} />
