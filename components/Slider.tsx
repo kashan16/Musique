@@ -1,4 +1,5 @@
-import * as RadixSlider from "@radix-ui/react-slider";
+import Slider from "@mui/material/Slider";
+import Tooltip from "@mui/material/Tooltip";
 import { useState } from "react";
 
 interface SliderProps {
@@ -9,45 +10,42 @@ interface SliderProps {
   step?: number;
 }
 
-const Slider: React.FC<SliderProps> = ({ value = 1, onChange, min = 0, max = 1, step = 0.01 }) => {
+const CustomSlider: React.FC<SliderProps> = ({
+  value = 1,
+  onChange,
+  min = 0,
+  max = 1,
+  step = 0.01,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleChange = (newValue: number[]) => {
-    onChange?.(newValue[0]);
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    onChange?.(newValue as number);
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
 
   return (
-    <RadixSlider.Root
-      className="relative flex items-center select-none touch-none w-20"
-      value={[value]}
-      min={min}
-      max={max}
-      step={step}
-      onValueChange={handleChange}
-      aria-label="Volume"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <RadixSlider.Track className="bg-neutral-300 relative grow rounded-full h-[4px]" />
-      {isHovered && (
-        <RadixSlider.Thumb
-          className="SliderThumb"
-          aria-label="Volume"
-          style={{
-            width: "16px",
-            height: "16px",
-            backgroundColor: "#4CAF50",
-            borderRadius: "50%",
-            boxShadow: "0px 0px 5px 0px #4CAF50",
-          }}
+    <div className="relative flex items-center select-none touch-none w-20">
+      <Tooltip title={`${Math.round(value * 100)}%`} open={isHovered}>
+        <Slider
+          value={value}
+          min={min}
+          max={max}
+          step={step}
+          onChange={handleChange}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         />
-      )}
-      <RadixSlider.Range
-        className="absolute bg-green-500 rounded-full h-full transition-all"
-        style={{ transform: `scaleX(${value})` }}
-      />
-    </RadixSlider.Root>
+      </Tooltip>
+    </div>
   );
 };
 
-export default Slider;
+export default CustomSlider;
