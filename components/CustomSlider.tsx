@@ -11,7 +11,7 @@ interface SliderProps {
 }
 
 const CustomSlider: React.FC<SliderProps> = ({
-  value = 1,
+  value,
   onChange,
   min = 0,
   max = 1,
@@ -33,7 +33,7 @@ const CustomSlider: React.FC<SliderProps> = ({
 
   return (
     <div className="relative flex items-center select-none touch-none w-20">
-    <Tooltip title={`${Math.round(value * 100)}%`} open={isHovered} placement="top">
+    <Tooltip title={`${Math.round((value) * 100)}%`} open={isHovered} placement="top">
       <Slider value={value} min={min} max={max} step={step} onChange={handleChange} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
         sx={{
           color: '#4CAF50',
