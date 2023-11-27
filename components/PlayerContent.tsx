@@ -2,6 +2,7 @@
 
 import usePlayer from "@/hooks/usePlayer";
 import { Song } from "@/types";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
@@ -25,6 +26,7 @@ const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
     const [ isPlaying , setIsPlaying ] = useState(false);
     const Icon = isPlaying ? BsPauseFill : BsPlayFill;
     const VolumeIcon = volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
+    const router = useRouter();
     const onPlayNext = () => {
         if(player.ids.length === 0)
         {
@@ -85,7 +87,6 @@ const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
             pause();
         }
     };
-
     const toggleMute = () => {
         if(volume === 0){
             setVolume(1)
@@ -99,11 +100,15 @@ const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
         setVolume(value);
         sound?.volume(value);
     };
+
+    const handleclick = () => {
+        router.push('/lyrics');
+    }
     return (
         <div className="grid grid-cols-2 md:grid-cols-3 h-full">
             <div className="flex w-full justify-start">
                 <div className="flex items-center gap-x-4">
-                    <MediaItem data={song}/>
+                    <MediaItem data={song} onClick={handleclick}/>
                     <LikeButton songId={song.id}/>
                     <ShuffleButton songId={song.id}/>
                 </div>
@@ -125,7 +130,7 @@ const PlayerContent : React.FC<PlayerContentProps> = ({song , songUrl}) => {
                     <Slider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
             </div>
             <div className="col-span-3 flex justify-center items-center">
-                <SeekBar onChange={() => {}} data={song} />
+                <SeekBar onChange={() => {}} onPlay = {handlePlay} onPause = {handlePlay} isPlaying = {isPlaying} data={song} />
             </div>
         </div>
     )

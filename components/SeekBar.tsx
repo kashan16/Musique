@@ -1,15 +1,21 @@
 import { Song } from "@/types";
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 interface SeekbarProps {
   onChange?: (value: number) => void;
   data: Song;
+  onPlay : () => void;
+  onPause : () => void;
+  isPlaying : boolean;
 }
 
-const SeekBar: React.FC<SeekbarProps> = ({ data }) => {
+const SeekBar: React.FC<SeekbarProps> = ({ data , onChange , onPlay , onPause , isPlaying}) => {
   const [songDuration, setSongDuration] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
+  let interval : any;
 
   useEffect(() => {
     const fetchSongDuration = async () => {
@@ -36,9 +42,7 @@ const SeekBar: React.FC<SeekbarProps> = ({ data }) => {
   }, [data.title, data.author]);
 
   useEffect(() => {
-    let interval : any;
-
-    if (songDuration !== null) {
+    if (songDuration !== null && isPlaying) {
       // Update progress every second
       interval = setInterval(() => {
         setProgress((prevProgress) => {
@@ -52,12 +56,11 @@ const SeekBar: React.FC<SeekbarProps> = ({ data }) => {
         });
       }, 1000);
     }
-
     return () => {
       // Cleanup interval on component unmount
       clearInterval(interval);
     };
-  }, [songDuration]);
+  }, [songDuration , isPlaying]);
 
   const handleChange = (newValue: number) => {
     // Update the displayed duration when the seek bar value changes
@@ -65,14 +68,25 @@ const SeekBar: React.FC<SeekbarProps> = ({ data }) => {
     setSongDuration(newDuration);
 
     // Call the provided onChange prop
+    onChange?.(newValue);
   };
+
+
+  useEffect(() => {
+    if(!isPlaying){
+      // If the song is paused, clear the interval
+      clearInterval(interval);
+    }
+  } , [isPlaying])
 
   return (
     <div style={{ position: 'relative', width: '256px', marginTop: '-15px' }}>
       <div className="relative flex items-center select-none touch-none h-full" aria-label="progress">
         <div style={{ marginRight: '10px' ,}} className="text-white text-bold transition-all">{formatDuration(progress * (songDuration || 1))}</div>
         <div className="bg-neutral-500 relative grow rounded-full h-[3px]">
-          <div className="absolute bg-green-500 rounded-full h-full transition-all" style={{ width: `${progress * 100}%` }} />
+          <Box sx={{ width: '100%' }}>
+          <LinearProgress variant="determinate" value={progress * 100} sx={{ borderRadius : '8px' , background: 'lightgray', '& .MuiLinearProgress-bar': { backgroundColor: 'limegreen' , borderRadius : '8px' },}}/>
+          </Box>
         </div>
         <div style={{ marginLeft: '10px' }} className="text-white text-bold">{formatDuration(songDuration || 0)}</div>
       </div>

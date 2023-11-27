@@ -39,4 +39,4 @@ const MediaItem : React.FC<MediaItemProps> = ({data , onClick}) => {
 
 }
 
-export default MediaItem
+export default MediaItem;
