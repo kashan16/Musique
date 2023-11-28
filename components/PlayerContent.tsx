@@ -3,7 +3,6 @@
 import usePlayer from "@/hooks/usePlayer";
 import { Song } from "@/types";
 import axios from "axios";
-import router from "next/router";
 import { useEffect, useState } from "react";
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
@@ -26,6 +25,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
   const [ Id , SetId ] = useState<string>("");
   const [ lyrics , SetLyrics ] = useState<string>("");
+  const [isLyricsVisible, setIsLyricsVisible] = useState(false);
   const VolumeIcon = player.volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
   const onPlayNext = () => {
     if (player.ids.length === 0) {
@@ -129,20 +129,15 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     FetchLyrics();
   } , [song.title , song.author , Id]);
 
-  /* const router = useRouter(); */
-
-  const handleClick = () => {
-    router.push({
-      pathname: '/lyrics',
-      query: { lyrics },
-    });
-  };
-  
+  const handleMediaItemClick = () => {
+    //Toggle the visibility of lyrics when MediaItem is clicked
+    setIsLyricsVisible(!isLyricsVisible)
+  }
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 h-full">
       <div className="flex w-full justify-start">
         <div className="flex items-center gap-x-4">
-          <MediaItem data={song} onClick={handleClick}/>
+          <MediaItem data={song} onClick={handleMediaItemClick}/>
           <LikeButton songId={song.id} />
           <ShuffleButton songId={song.id} />
         </div>
@@ -166,6 +161,14 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       <div className="col-span-3 flex justify-center items-center">
         <SeekBar onChange={() => {}} onPlay={handlePlay} onPause={handlePlay} isPlaying={isPlaying} data={song}/>
       </div>
+      {isLyricsVisible && (
+        <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
+          <div>
+            <h1 className="text-white text-3xl font-semibold">Lyrics</h1>
+          </div>
+          <div className="text-white p-4">{lyrics}</div>
+        </div>
+      )}
     </div>
   );
 };
