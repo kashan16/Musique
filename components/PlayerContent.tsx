@@ -2,7 +2,8 @@
 
 import usePlayer from "@/hooks/usePlayer";
 import { Song } from "@/types";
-import { useRouter } from "next/navigation";
+import axios from "axios";
+import router from "next/router";
 import { useEffect, useState } from "react";
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
@@ -23,9 +24,9 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const player = usePlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
+  const [ Id , SetId ] = useState<string>("");
+  const [ lyrics , SetLyrics ] = useState<string>("");
   const VolumeIcon = player.volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
-  const router = useRouter();
-
   const onPlayNext = () => {
     if (player.ids.length === 0) {
       return;
@@ -91,15 +92,57 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     sound?.volume(value);
   };
 
-  const handleclick = () => {
-    router.push("/lyrics?data=${song}");
-  };
+  useEffect(() => {
+    const FetchId = async () => {
+      try {
+        const response = await axios.get(`https://saavn.me/search/songs?query=${encodeURIComponent(song.title)}`);
+        const result = response.data?.data?.results[0];
+        if(result){
+          const lowercaseAuthor = song.author.toLowerCase();
+          const lowercasePrimaryArtists = result.primaryArtists.toLowerCase();
+          if(lowercasePrimaryArtists.includes(lowercaseAuthor))
+          {
+            SetId(result.id)
+          }
+          else {
+            console.warn('Not Found');
+          }
+        }
+      }
+      catch (error) {
+        console.error('Error' , error);
+      }
+    };
+    FetchId();
+    const FetchLyrics = async () => {
+      try {
+        const Response = await axios.get(`https://saavn.me/lyrics?id=${encodeURIComponent(Id)}`);
+        const Result = Response.data?.data?.lyrics;
+        if(Result) {
+          SetLyrics(Result)
+        }
+      }
+      catch (error) {
+        console.error('Error' , error);
+      }
+    };
+    FetchLyrics();
+  } , [song.title , song.author , Id]);
 
+  /* const router = useRouter(); */
+
+  const handleClick = () => {
+    router.push({
+      pathname: '/lyrics',
+      query: { lyrics },
+    });
+  };
+  
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 h-full">
       <div className="flex w-full justify-start">
         <div className="flex items-center gap-x-4">
-          <MediaItem data={song} onClick={handleclick} />
+          <MediaItem data={song} onClick={handleClick}/>
           <LikeButton songId={song.id} />
           <ShuffleButton songId={song.id} />
         </div>
@@ -121,7 +164,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
         <CustomSlider value={player.volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
       </div>
       <div className="col-span-3 flex justify-center items-center">
-        <SeekBar onChange={() => {}} onPlay={handlePlay} onPause={handlePlay} isPlaying={isPlaying} data={song} />
+        <SeekBar onChange={() => {}} onPlay={handlePlay} onPause={handlePlay} isPlaying={isPlaying} data={song}/>
       </div>
     </div>
   );

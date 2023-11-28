@@ -77,7 +77,7 @@ const SeekBar: React.FC<SeekbarProps> = ({ data , onChange , onPlay , onPause , 
       // If the song is paused, clear the interval
       clearInterval(interval);
     }
-  } , [isPlaying])
+  } , [isPlaying , interval]);
 
   return (
     <div style={{ position: 'relative', width: '256px', marginTop: '-15px' }}>
