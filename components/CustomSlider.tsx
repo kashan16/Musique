@@ -33,7 +33,7 @@ const CustomSlider: React.FC<SliderProps> = ({
 
   return (
     <div className="relative flex items-center select-none touch-none w-20">
-    <Tooltip title={`${Math.round((value) * 100)}%`} open={isHovered} placement="top">
+    <Tooltip title={`${Math.round((value || 1) * 100)}%`} open={isHovered} placement="top">
       <Slider value={value} min={min} max={max} step={step} onChange={handleChange} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
         sx={{
           color: '#4CAF50',
