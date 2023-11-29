@@ -15,9 +15,7 @@ const LyricsContent : React.FC<LyricsContentProps> = ({song , songUrl}) => {
     useEffect(() => {
         const FetchId = async () => {
           try {
-            const response = await axios.get(
-              `https://saavn.me/search/songs?query=${encodeURIComponent(song.title)}`
-            );
+            const response = await axios.get(`https://saavn.me/search/songs?query=${encodeURIComponent(song.title)}`);
             const result = response.data?.data?.results[0];
             if (result) {
               const lowercaseAuthor = song.author.toLowerCase();
@@ -47,12 +45,17 @@ const LyricsContent : React.FC<LyricsContentProps> = ({song , songUrl}) => {
         FetchLyrics();
       }, [song.title, song.author, Id]);
     return (
-        <div>
-            <div className="items-center justify-center">
-                <h3>{song.title} By {song.author}</h3>
-                <p>{Lyrics}</p>
-            </div>
+      <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
+        <div className="p-4">
+          <h1 className="text-white text-3xl font-semibold mb-4">Lyrics</h1>
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h3 className="text-black text-xl font-semibold mb-2">{song.title}</h3>
+            <p className="text-gray-800">{song.author}</p>
+            <hr className="my-4" />
+            <p className="text-gray-700">{Lyrics}</p>
+          </div>
         </div>
+      </div>
     )
 }
 

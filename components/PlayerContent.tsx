@@ -93,7 +93,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
     router.push('/lyrics');
   }
   return (
-    <div className={`h-full col-span-1 grid grid-cols-2 md:grid-cols-3"}`}>
+    <div className="h-full col-span-1 grid grid-cols-2 md:grid-cols-3">
       <div className="flex w-full justify-start">
         <div className="flex items-center gap-x-4">
           <MediaItem data={song} onClick={handleClick} />
@@ -125,4 +125,3 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
 };
 
 export default PlayerContent;
-
