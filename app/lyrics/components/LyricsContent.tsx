@@ -1,5 +1,6 @@
 "use client";
 
+import useLoadImage from "@/hooks/useLoadImage";
 import { Song } from "@/types";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ interface LyricsContentProps {
 const LyricsContent : React.FC<LyricsContentProps> = ({song , songUrl}) => {
     const [ Id ,SetId ] = useState<string>("");
     const [ Lyrics , SetLyrics ] = useState<string>("");
+    const imageUrl = useLoadImage(song);
     useEffect(() => {
         const FetchId = async () => {
           try {
@@ -47,13 +49,22 @@ const LyricsContent : React.FC<LyricsContentProps> = ({song , songUrl}) => {
     return (
     <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
       <div className="p-4">
-        <h1 className="text-white text-3xl font-semibold mb-4">Lyrics</h1>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-black text-xl font-semibold mb-2">{song.title}</h3>
-          <p className="text-gray-800">{song.author}</p>
-          <hr className="my-4" />
-          <div className="text-gray-700 text-bold" style={{ fontSize : '18px'}}>{Lyrics.split('\n').map((line, index) => (<p key={index} className="mb-2">{line}</p>))}</div>
+      <h1 className="text-white text-3xl font-semibold mb-4">Lyrics</h1>
+        <div className="flex items-center">
+          <div className="bg-beige-300 p-6 rounded-lg shadow-md flex items-center">
+          {/* Your image element goes here */}
+            <img src={imageUrl || undefined} alt="Song Image" className="w-full h-full object-cover rounded-full" />
+            <div className="ml-4">
+              <h3 className="text-black text-xl font-semibold mb-2">{song.title}</h3>
+              <p className="text-gray-800">{song.author}</p>
+            </div>
+          </div>
         </div>
+      <hr className="my-4" />
+      <div className="text-gray-200" style={{ fontSize: '24px' }}>
+      {Lyrics.split('\n').map((line, index) => (
+        <p key={index} className="mb-2">{line}</p>))}
+      </div>
       </div>
     </div>
     )
