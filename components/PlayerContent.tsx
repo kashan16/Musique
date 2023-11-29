@@ -3,6 +3,7 @@
 import usePlayer from "@/hooks/usePlayer";
 import { Song } from "@/types";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
@@ -23,10 +24,12 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   const player = usePlayer();
   const [isPlaying, setIsPlaying] = useState(false);
   const Icon = isPlaying ? BsPauseFill : BsPlayFill;
-  const [ Id , SetId ] = useState<string>("");
-  const [ lyrics , SetLyrics ] = useState<string>("");
+  const [Id, SetId] = useState<string>("");
+  const [lyrics, SetLyrics] = useState<string>("");
   const [isLyricsVisible, setIsLyricsVisible] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const VolumeIcon = player.volume === 0 ? HiSpeakerXMark : HiSpeakerWave;
+
   const onPlayNext = () => {
     if (player.ids.length === 0) {
       return;
@@ -56,7 +59,7 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   };
 
   const [play, { pause, sound }] = useSound(songUrl, {
-    volume: player.volume, // Use the volume from the store
+    volume: player.volume,
     onplay: () => setIsPlaying(true),
     onend: () => {
       setIsPlaying(false);
@@ -82,12 +85,10 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   };
 
   const toggleMute = () => {
-    // Update the volume in the store
     player.setVolume(player.volume === 0 ? 1 : 0);
   };
 
   const handleVolumeChange = (value: number) => {
-    // Update the volume in the store
     player.setVolume(value);
     sound?.volume(value);
   };
@@ -95,22 +96,21 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
   useEffect(() => {
     const FetchId = async () => {
       try {
-        const response = await axios.get(`https://saavn.me/search/songs?query=${encodeURIComponent(song.title)}`);
+        const response = await axios.get(
+          `https://saavn.me/search/songs?query=${encodeURIComponent(song.title)}`
+        );
         const result = response.data?.data?.results[0];
-        if(result){
+        if (result) {
           const lowercaseAuthor = song.author.toLowerCase();
           const lowercasePrimaryArtists = result.primaryArtists.toLowerCase();
-          if(lowercasePrimaryArtists.includes(lowercaseAuthor))
-          {
-            SetId(result.id)
-          }
-          else {
-            console.warn('Not Found');
+          if (lowercasePrimaryArtists.includes(lowercaseAuthor)) {
+            SetId(result.id);
+          } else {
+            console.warn("Not Found");
           }
         }
-      }
-      catch (error) {
-        console.error('Error' , error);
+      } catch (error) {
+        console.error("Error", error);
       }
     };
     FetchId();
@@ -118,50 +118,62 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
       try {
         const Response = await axios.get(`https://saavn.me/lyrics?id=${encodeURIComponent(Id)}`);
         const Result = Response.data?.data?.lyrics;
-        if(Result) {
-          SetLyrics(Result)
+        if (Result) {
+          SetLyrics(Result);
         }
-      }
-      catch (error) {
-        console.error('Error' , error);
+      } catch (error) {
+        console.error("Error", error);
       }
     };
     FetchLyrics();
-  } , [song.title , song.author , Id]);
-
-  const handleMediaItemClick = () => {
-    //Toggle the visibility of lyrics when MediaItem is clicked
-    setIsLyricsVisible(!isLyricsVisible)
+  }, [song.title, song.author, Id]);
+  const router = useRouter();
+  const handleClick = () => {
+    router.push('/lyrics');
   }
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 h-full">
+    <div className={`h-full ${isMinimized ? "col-span-1" : "grid grid-cols-2 md:grid-cols-3"}`}>
       <div className="flex w-full justify-start">
         <div className="flex items-center gap-x-4">
-          <MediaItem data={song} onClick={handleMediaItemClick}/>
+          <MediaItem data={song} onClick={handleClick} />
           <LikeButton songId={song.id} />
           <ShuffleButton songId={song.id} />
         </div>
       </div>
       <div className="flex md:hidden col-auto w-full justify-end items-center">
-        <div onClick={handlePlay} className="h-10 w-10 flex items-center justify-center rounded-full bg-white p-1 cursor-pointer">
+        <div
+          onClick={handlePlay}
+          className="h-10 w-10 flex items-center justify-center rounded-full bg-white p-1 cursor-pointer"
+        >
           <Icon size={20} className="text-black" />
         </div>
       </div>
       <div className="hidden md:flex h-full justify-center items-center w-full max-w-[722px] gap-x-6">
-        <AiFillStepBackward onClick={onPlayPrevious} size={28} className="text-neutral-400 cursor-pointer hover:text-white transition"/>
-        <div onClick={handlePlay} className="flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer">
+        <AiFillStepBackward
+          onClick={onPlayPrevious}
+          size={28}
+          className="text-neutral-400 cursor-pointer hover:text-white transition"
+        />
+        <div
+          onClick={handlePlay}
+          className="flex items-center justify-center h-10 w-10 rounded-full bg-white p-1 cursor-pointer"
+        >
           <Icon size={30} className="text-black" />
         </div>
-        <AiFillStepForward onClick={onPlayNext} size={28} className="text-neutral-400 cursor-pointer hover:text-white transition"/>
+        <AiFillStepForward
+          onClick={onPlayNext}
+          size={28}
+          className="text-neutral-400 cursor-pointer hover:text-white transition"
+        />
       </div>
       <div className="hidden md:flex w-full justify-end items-center gap-x-2">
         <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={40} />
-        <CustomSlider value={player.volume} onChange={handleVolumeChange} min={0} max={1} step={0.01}/>
+        <CustomSlider value={player.volume} onChange={handleVolumeChange} min={0} max={1} step={0.01} />
       </div>
       <div className="col-span-3 flex justify-center items-center">
-        <SeekBar onChange={() => {}} onPlay={handlePlay} onPause={handlePlay} isPlaying={isPlaying} data={song}/>
+        <SeekBar onChange={() => {}} onPlay={handlePlay} onPause={handlePlay} isPlaying={isPlaying} data={song} />
       </div>
-      {isLyricsVisible && (
+      {isLyricsVisible && !isMinimized && (
         <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
           <div>
             <h1 className="text-white text-3xl font-semibold">Lyrics</h1>
@@ -169,8 +181,24 @@ const PlayerContent: React.FC<PlayerContentProps> = ({ song, songUrl }) => {
           <div className="text-white p-4">{lyrics}</div>
         </div>
       )}
+       {isMinimized ? (
+        <div className="col-span-3 flex justify-end items-center">
+          <button onClick={() => {}} className="text-white">
+            Maximize
+          </button>
+        </div>
+      ) : (
+        <div className="hidden md:flex w-full justify-end items-center gap-x-2">
+          <VolumeIcon onClick={toggleMute} className="cursor-pointer" size={40} />
+          <CustomSlider value={player.volume} onChange={handleVolumeChange} min={0} max={1} step={0.01} />
+          <button onClick={() => {}} className="text-white">
+            Minimize
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default PlayerContent;
+
