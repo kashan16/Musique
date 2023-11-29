@@ -45,17 +45,17 @@ const LyricsContent : React.FC<LyricsContentProps> = ({song , songUrl}) => {
         FetchLyrics();
       }, [song.title, song.author, Id]);
     return (
-      <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
-        <div className="p-4">
-          <h1 className="text-white text-3xl font-semibold mb-4">Lyrics</h1>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-black text-xl font-semibold mb-2">{song.title}</h3>
-            <p className="text-gray-800">{song.author}</p>
-            <hr className="my-4" />
-            <p className="text-gray-700">{Lyrics}</p>
-          </div>
+    <div className="bg-neutral-900 rounded-lg h-full w-full overflow-hidden overflow-y-auto">
+      <div className="p-4">
+        <h1 className="text-white text-3xl font-semibold mb-4">Lyrics</h1>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-black text-xl font-semibold mb-2">{song.title}</h3>
+          <p className="text-gray-800">{song.author}</p>
+          <hr className="my-4" />
+          <div className="text-gray-700 text-bold" style={{ fontSize : '18px'}}>{Lyrics.split('\n').map((line, index) => (<p key={index} className="mb-2">{line}</p>))}</div>
         </div>
       </div>
+    </div>
     )
 }
 
