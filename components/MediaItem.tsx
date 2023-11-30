@@ -1,5 +1,6 @@
 "use client"
 
+import useLoadImage from "@/hooks/useLoadImage";
 import { Song } from "@/types";
 import axios from "axios";
 import Image from "next/image";
@@ -12,8 +13,7 @@ interface MediaItemProps{
 
 const MediaItem : React.FC<MediaItemProps> = ({data , onClick}) => {
     const [ isHovered , setIsHovered ] = useState(false);
-
-    /* const imageUrl = useLoadImage(data); */
+    const URL = useLoadImage(data);
     const [ imageUrl , SetImageUrl ] = useState<string>("");
 
     useEffect(() => {
@@ -25,7 +25,7 @@ const MediaItem : React.FC<MediaItemProps> = ({data , onClick}) => {
                     const lowercaseAuthor = data.author.toLowerCase();
                     const lowercasePrimaryArtists = result.primaryArtists.toLowerCase();
                     if (lowercasePrimaryArtists.includes(lowercaseAuthor)) {
-                        const imageUrl = result.image.link[1];
+                        const imageUrl = result.image.link;
                         SetImageUrl(imageUrl);
                     }
                 }
@@ -50,7 +50,7 @@ const MediaItem : React.FC<MediaItemProps> = ({data , onClick}) => {
             <div className="relative rounded-md min-h-[48px] min-w-[48px] overflow-hidden">
                 <Image 
                     fill
-                    src = {imageUrl || '/images/liked.png'}
+                    src = {imageUrl || URL}
                     alt =  "Media Item"
                     className = "object-cover"/>
             </div>  
