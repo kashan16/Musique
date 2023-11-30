@@ -8,15 +8,14 @@ const getSongs = async (): Promise<Song[]> => {
     cookies: cookies
   });
 
-  const { data, error } = await supabase
+    const { data, error } = await supabase
     .from('songs')
     .select('*')
-    .order('created_at', { ascending: false })
+    .order('created_at', { ascending: false });
 
-  if (error) {
-    console.log(error.message);
-  }
-
+    if(error) {
+      console.error(error.message);
+    }
   return (data as any) || [];
 };
 
