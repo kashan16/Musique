@@ -1,9 +1,9 @@
 "use client"
 
-import useLoadImage from "@/hooks/useLoadImage";
 import { Song } from "@/types";
+import axios from "axios";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface MediaItemProps{
     data : Song;
@@ -13,7 +13,29 @@ interface MediaItemProps{
 const MediaItem : React.FC<MediaItemProps> = ({data , onClick}) => {
     const [ isHovered , setIsHovered ] = useState(false);
 
-    const imageUrl = useLoadImage(data);
+    /* const imageUrl = useLoadImage(data); */
+    const [ imageUrl , SetImageUrl ] = useState<string>("");
+
+    useEffect(() => {
+        const FetchImageUrl = async () => {
+            try {
+                const response = await axios.get(`https://saavn.me/search/songs?query=${encodeURIComponent(data.title)}`);
+                const result = response.data?.data?.results[0];
+                if (result) {
+                    const lowercaseAuthor = data.author.toLowerCase();
+                    const lowercasePrimaryArtists = result.primaryArtists.toLowerCase();
+                    if (lowercasePrimaryArtists.includes(lowercaseAuthor)) {
+                        const imageUrl = result.image.link[1];
+                        SetImageUrl(imageUrl);
+                    }
+                }
+            }
+            catch(error) {
+                console.error('Error Fetching Data' , error);
+            }
+        }
+        FetchImageUrl();
+    } , [data.title , data.author]);
 
     const handleClick = () => {
         if(onClick){
