@@ -9,6 +9,7 @@ A Spotify clone built with TypeScript and React.
   - [Features](#features)
   - [Installation](#installation)
   - [Technologies](#technologies)
+  - [UI SCREENSHOTS](#ui-screenshots)
   - [Contributing](#contributing)
   - [License](#license)
 ## Features
@@ -66,6 +67,16 @@ List the technologies, libraries, and frameworks used in your project:
 - Supabase
 - Saavan API
 - Axios
+
+## UI SCREENSHOTS
+
+![HOME](SCREENSHOTS/HOME_PAGE.png)
+![LIBRARY](SCREENSHOTS/LIBRARY.png)
+![LIKED](SCREENSHOTS/LIKED.png)
+![LYRICS](SCREENSHOTS/LYRICS.png)
+![PLAYER](SCREENSHOTS/PLAYER.png)
+![SEARCH](SCREENSHOTS/SEARCH.png)
+
 
 ## Contributing
 
