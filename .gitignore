@@ -11,6 +11,9 @@ APIandPASS.txt
 # testing
 /coverage
 
+# Screenshots
+/SCREENSHOTS
+
 # next.js
 /.next/
 /out/
