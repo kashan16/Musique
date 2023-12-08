@@ -69,12 +69,17 @@ List the technologies, libraries, and frameworks used in your project:
 - Axios
 
 ## UI SCREENSHOTS
-
+- Home Page
 ![HOME](SCREENSHOTS/HOME_PAGE.png)
+- Library
 ![LIBRARY](SCREENSHOTS/LIBRARY.png)
+- Liked
 ![LIKED](SCREENSHOTS/LIKED.png)
+- Lyrics
 ![LYRICS](SCREENSHOTS/LYRICS.png)
+- Player
 ![PLAYER](SCREENSHOTS/PLAYER.png)
+- Search
 ![SEARCH](SCREENSHOTS/SEARCH.png)
 
 
