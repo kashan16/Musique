@@ -72,15 +72,15 @@ List the technologies, libraries, and frameworks used in your project:
 - Home Page
 ![HOME](https://i.postimg.cc/fRdXpGYx/HOME-PAGE.png)
 - Library
-![LIBRARY](SCREENSHOTS/LIBRARY.png)
+![LIBRARY](https://i.postimg.cc/Xvc579Hq/LIBRARY.png)
 - Liked
-![LIKED](SCREENSHOTS/LIKED.png)
+![LIKED](https://i.postimg.cc/nzFDsMgk/LIKED.png)
 - Lyrics
-![LYRICS](SCREENSHOTS/LYRICS.png)
+![LYRICS](https://i.postimg.cc/4ynH5qJH/LYRICS.png)
 - Player
-![PLAYER](SCREENSHOTS/PLAYER.png)
+![PLAYER](https://i.postimg.cc/nLt7J31N/PLAYER.png)
 - Search
-![SEARCH](SCREENSHOTS/SEARCH.png)
+![SEARCH](https://i.postimg.cc/0QVJ7Pqq/SEARCH.png)
 
 
 ## Contributing
