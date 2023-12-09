@@ -70,7 +70,7 @@ List the technologies, libraries, and frameworks used in your project:
 
 ## UI SCREENSHOTS
 - Home Page
-![HOME](SCREENSHOTS/HOME_PAGE.png)
+![HOME](https://drive.google.com/file/d/1OF9d0pbSBCwBcynsxh2vwq5AJlP2_8gg/view?usp=sharing)
 - Library
 ![LIBRARY](SCREENSHOTS/LIBRARY.png)
 - Liked
