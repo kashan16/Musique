@@ -3,7 +3,9 @@
 import useLoadImage from "@/hooks/useLoadImage";
 import { Song } from "@/types";
 import axios from "axios";
+import Image from 'next/image';
 import { useEffect, useState } from "react";
+
 
 interface LyricsContentProps {
     song : Song;
@@ -53,7 +55,7 @@ const LyricsContent : React.FC<LyricsContentProps> = ({song , songUrl}) => {
         <div className="flex items-center">
           <div className="bg-beige-300 p-6 rounded-lg shadow-md flex items-center">
           {/* Your image element goes here */}
-            <img src={imageUrl || undefined} alt="Song Image" className="w-full h-full object-cover rounded-full" />
+            <Image src={imageUrl || '/PLACEHOLDER/album.svg'}  alt="Song Image" className="w-full h-full object-cover rounded-full" />
             <div className="ml-4">
               <h3 className="text-black text-xl font-semibold mb-2">{song.title}</h3>
               <p className="text-gray-800">{song.author}</p>

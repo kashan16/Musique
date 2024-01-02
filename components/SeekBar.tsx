@@ -1,8 +1,8 @@
 import { Song } from "@/types";
-import Box from '@mui/material/Box';
-import LinearProgress from '@mui/material/LinearProgress';
+import { Tooltip } from "@mui/material";
+import Slider from '@mui/material/Slider';
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface SeekbarProps {
   onChange?: (value: number) => void;
@@ -13,9 +13,33 @@ interface SeekbarProps {
 }
 
 const SeekBar: React.FC<SeekbarProps> = ({ data , onChange , onPlay , onPause , isPlaying}) => {
-  const [songDuration, setSongDuration] = useState<number | null>(null);
+  const [songDuration, setSongDuration] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [songUrl , setSongUrl ] = useState<string | null>("");
   let interval : any;
+
+  useEffect(() => {
+    const fetchSongUrl = async () => {
+      try {
+        const response = await axios.get(`https://saavn.me/search/songs?query=${encodeURIComponent(data.title)}`);
+        const result = response.data?.data?.results[0];
+        if (result) {
+          const lowercaseAuthor = data.author.toLowerCase();
+          const lowercasePrimaryArtists = result.primaryArtists.toLowerCase();
+          if (lowercasePrimaryArtists.includes(lowercaseAuthor)) {
+            const lastDownloadLink = result.downloadUrl.slice(-1)[0].link;
+            setSongUrl(lastDownloadLink);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching song URL:', error);
+      }
+    };
+  
+    fetchSongUrl(); 
+  
+  }, [data.title, data.author]);
+  
 
   useEffect(() => {
     const fetchSongDuration = async () => {
@@ -41,26 +65,32 @@ const SeekBar: React.FC<SeekbarProps> = ({ data , onChange , onPlay , onPause , 
     fetchSongDuration();
   }, [data.title, data.author]);
 
-  useEffect(() => {
-    if (songDuration !== null && isPlaying) {
-      // Update progress every second
-      interval = setInterval(() => {
-        setProgress((prevProgress) => {
-          const newProgress = prevProgress + (1 / songDuration);
-          // Check if the new progress is greater than or equal to 1 (100%)
-          if (newProgress >= 1) {
-            // Song has ended, clear the interval
-            clearInterval(interval);
-          }
-          return newProgress;
-        });
-      }, 1000);
-    }
-    return () => {
-      // Cleanup interval on component unmount
-      clearInterval(interval);
-    };
-  }, [songDuration , isPlaying]);
+  function TimeCurrent() {
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
+    useEffect(() => {
+      if (songDuration !== null && isPlaying) {
+        // Update progress every second
+        intervalRef.current = setInterval(() => {
+          setProgress((prevProgress) => {
+            const newProgress = prevProgress + (1 / (songDuration || 0));
+            // Check if the new progress is greater than or equal to 1 (100%)
+            if (newProgress >= 1) {
+              // Song has ended, clear the interval
+              clearInterval(intervalRef.current!);
+            }
+            return newProgress;
+          });
+        }, 1000);
+      }
+  
+      return () => {
+        // Cleanup interval on component unmount
+        clearInterval(intervalRef.current!);
+      };
+    }, []);
+  }
+
+  TimeCurrent();
 
   const handleChange = (newValue: number) => {
     // Update the displayed duration when the seek bar value changes
@@ -79,17 +109,39 @@ const SeekBar: React.FC<SeekbarProps> = ({ data , onChange , onPlay , onPause , 
     }
   } , [isPlaying , interval]);
 
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   return (
     <div style={{ position: 'relative', width: '256px', marginTop: '-15px' }}>
-      <div className="relative flex items-center select-none touch-none h-full" aria-label="progress">
-        <div style={{ marginRight: '10px' ,}} className="text-white text-bold transition-all">{formatDuration(progress * (songDuration || 1))}</div>
-        <div className="bg-neutral-500 relative grow rounded-full h-[3px]">
-          <Box sx={{ width: '100%' }}>
-          <LinearProgress variant="determinate" value={progress * 100} sx={{ borderRadius : '8px' , background: 'lightgray', '& .MuiLinearProgress-bar': { backgroundColor: 'limegreen' , borderRadius : '8px' },}}/>
-          </Box>
-        </div>
-        <div style={{ marginLeft: '10px' }} className="text-white text-bold">{formatDuration(songDuration || 0)}</div>
-      </div>
+      <Tooltip  title={`${formatDuration(songDuration || 0)} (${Math.round((progress || 1) * 100)}%)`} open={isHovered} placement="top">
+      <Slider value={progress} min={0} max={songDuration} step={1} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}
+        sx={{
+          color: '#4CAF50',
+          '& .MuiSlider-thumb': {
+            width: 12,
+            height: 12,
+            backgroundColor: '#4CAF50',
+            borderRadius: '50%',
+            boxShadow: '0px 0px 5px 0px #4CAF50',
+            visibility : isHovered ? 'visible' : 'hidden',
+          },
+          '& .MuiSlider-rail': {
+            backgroundColor: '#d4d4d4',
+          },
+          '& .MuiSlider-track': {
+            backgroundColor: '#4CAF50',
+          },
+        }}
+      />
+      </Tooltip>
     </div>
   );
 };

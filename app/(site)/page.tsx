@@ -1,6 +1,7 @@
 import getSongs from "@/actions/getSongs";
 import Header from "@/components/Header";
 import ListItem from "@/components/ListItem";
+import TopTracks from "@/components/TopTracks";
 import PageContent from "./component/PageContent";
 
 export const revalidate = 0;
@@ -33,6 +34,15 @@ export default async function Home(){
         </div>
         <div>
           <PageContent songs = {songs} />
+        </div>
+        <div>
+          
+        </div>
+        <h1 className="text-white text-2xl font-semibold">
+          Top Tracks
+        </h1>
+        <div>
+          <TopTracks/>
         </div>
       </div>
     </div>
