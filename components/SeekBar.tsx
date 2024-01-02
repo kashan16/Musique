@@ -63,9 +63,10 @@ const SeekBar: React.FC<SeekbarProps> = ({ data , onChange , onPlay , onPause , 
         clearInterval(intervalRef.current!);
       };
     }, []);
+    TimeCurrent();
   }
 
-  TimeCurrent();
+  /* TimeCurrent(); */
 
   const handleChange = (newValue: number) => {
     // Update the displayed duration when the seek bar value changes
