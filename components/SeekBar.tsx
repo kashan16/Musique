@@ -1,20 +1,20 @@
 import { Song } from "@/types";
 import { Box, LinearProgress } from "@mui/material";
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface SeekbarProps {
   onChange?: (value: number) => void;
   data: Song;
-  onPlay : () => void;
-  onPause : () => void;
-  isPlaying : boolean;
+  onPlay: () => void;
+  onPause: () => void;
+  isPlaying: boolean;
 }
 
-const SeekBar: React.FC<SeekbarProps> = ({ data , onChange , onPlay , onPause , isPlaying}) => {
+const SeekBar: React.FC<SeekbarProps> = ({ data, onChange, onPlay, onPause, isPlaying }) => {
   const [songDuration, setSongDuration] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
-  let interval : any;
+  let interval: any;
 
   useEffect(() => {
     const fetchSongDuration = async () => {
@@ -40,61 +40,58 @@ const SeekBar: React.FC<SeekbarProps> = ({ data , onChange , onPlay , onPause , 
     fetchSongDuration();
   }, [data.title, data.author]);
 
-  function TimeCurrent() {
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    useEffect(() => {
-      if (songDuration !== null && isPlaying) {
-        // Update progress every second
-        intervalRef.current = setInterval(() => {
-          setProgress((prevProgress) => {
-            const newProgress = prevProgress + (1 / (songDuration || 0));
-            // Check if the new progress is greater than or equal to 1 (100%)
-            if (newProgress >= 1) {
-              // Song has ended, clear the interval
-              clearInterval(intervalRef.current!);
-            }
-            return newProgress;
-          });
-        }, 1000);
-      }
-  
-      return () => {
-        // Cleanup interval on component unmount
-        clearInterval(intervalRef.current!);
-      };
-    }, []);
-    TimeCurrent();
-  }
+  useEffect(() => {
+    if (isPlaying && songDuration !== null) {
+      // Update progress every second
+      interval = setInterval(() => {
+        setProgress((prevProgress) => {
+          const newProgress = prevProgress + (1 / songDuration);
+          // Check if the new progress is greater than or equal to 1 (100%)
+          if (newProgress >= 1) {
+            // Song has ended, clear the interval
+            clearInterval(interval);
+          }
+          return newProgress;
+        });
+      }, 1000);
+    }
 
-  /* TimeCurrent(); */
+    return () => {
+      // Cleanup interval on component unmount or when paused
+      clearInterval(interval);
+    };
+  }, [isPlaying, songDuration]);
 
   const handleChange = (newValue: number) => {
     // Update the displayed duration when the seek bar value changes
     const newDuration = newValue * (songDuration || 0);
     setSongDuration(newDuration);
 
+    // Update the progress state based on the seek bar value
+    setProgress(newValue);
+
     // Call the provided onChange prop
     onChange?.(newValue);
   };
 
-
-  useEffect(() => {
-    if(!isPlaying){
-      // If the song is paused, clear the interval
-      clearInterval(interval);
-    }
-  } , [isPlaying , interval]);
-
   return (
     <div style={{ position: 'relative', width: '256px', marginTop: '-15px' }}>
       <div className="relative flex items-center select-none touch-none h-full" aria-label="progress">
-        <div style={{ marginRight: '10px' ,}} className="text-white text-bold transition-all">{formatDuration(progress * (songDuration || 1))}</div>
+        <div style={{ marginRight: '10px' }} className="text-white text-bold transition-all">
+          {formatDuration(progress * (songDuration || 1))}
+        </div>
         <div className="bg-neutral-500 relative grow rounded-full h-[3px]">
           <Box sx={{ width: '100%' }}>
-            <LinearProgress variant="determinate" value={progress * 100} sx={{ borderRadius : '8px' , background: 'lightgray', '& .MuiLinearProgress-bar': { backgroundColor: 'limegreen' , borderRadius : '8px' },}}/>
+            <LinearProgress
+              variant="determinate"
+              value={progress * 100}
+              sx={{ borderRadius: '8px', background: 'lightgray', '& .MuiLinearProgress-bar': { backgroundColor: 'limegreen', borderRadius: '8px' } }}
+            />
           </Box>
         </div>
-        <div style={{ marginLeft: '10px' }} className="text-white text-bold">{formatDuration(songDuration || 0)}</div>
+        <div style={{ marginLeft: '10px' }} className="text-white text-bold">
+          {formatDuration(songDuration || 0)}
+        </div>
       </div>
     </div>
   );
