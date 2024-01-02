@@ -50,7 +50,7 @@ const MediaItem : React.FC<MediaItemProps> = ({data , onClick}) => {
             <div className="relative rounded-md min-h-[48px] min-w-[48px] overflow-hidden">
                 <Image 
                     fill
-                    src = {imageUrl || URL}
+                    src = {imageUrl || URL || '/PLACEHOLDER/album.svg'}
                     alt =  "Media Item"
                     className = "object-cover"/>
             </div>  
